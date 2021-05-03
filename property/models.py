@@ -58,3 +58,6 @@ class Complaint(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Кто жалуется')
     flat = models.ForeignKey(Flat, on_delete=models.CASCADE, verbose_name='Квартира, на которую пожаловались')
     text = models.TextField(blank=True, null=True, verbose_name='Текст жалобы')
+
+    def __str__(self):
+        return f"{self.pk}: {self.author}, {self.flat.town}, {self.flat.address}"
