@@ -4,6 +4,20 @@ from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 
 
+class Owner(models.Model):
+    name = models.CharField('ФИО владельца', max_length=200)
+    phone_number = models.CharField('Номер владельца', max_length=20)
+    pure_phone = PhoneNumberField('Нормализованный номер телефона', blank=True, null=True)
+    flats = models.ManyToManyField(to='Flat',
+                                   blank=True,
+                                   related_name='flats',
+                                   verbose_name='Квартиры в собственности',
+                                   )
+
+    def __str__(self):
+        return self.name
+
+
 class Flat(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
     owner_phone_number = models.CharField('Номер владельца', max_length=20)
