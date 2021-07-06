@@ -5,8 +5,10 @@ from django.db import migrations
 
 def parse_phone(number, country="RU"):
     parsed_number = phonenumbers.parse(number, country)
-    country_code, number = parsed_number.country_code, parsed_number.national_number
-    return f"+{country_code}{number}"
+    if phonenumbers.is_valid_number(parsed_number):
+        country_code, number = parsed_number.country_code, parsed_number.national_number
+        return f"+{country_code}{number}"
+    return
 
 
 def fill_owner_pure_phone(apps, schema_editor):
@@ -16,11 +18,19 @@ def fill_owner_pure_phone(apps, schema_editor):
         flat.save()
 
 
+def move_backward(apps, schema_editor):
+    Flat = apps.get_model("property", "Flat")
+    for flat in Flat.objects.filter(owner_phone_number="+70000000000"):
+        flat.owner_pure_phone = None
+        flat.save()
+
+
 class Migration(migrations.Migration):
     dependencies = [
         ('property', '0011_auto_20210705_1742'),
     ]
 
     operations = [
-        migrations.RunPython(fill_owner_pure_phone)
+        migrations.RunPython(fill_owner_pure_phone, move_backward)
+
     ]
