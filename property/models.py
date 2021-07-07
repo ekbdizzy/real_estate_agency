@@ -5,9 +5,9 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Owner(models.Model):
-    name = models.CharField('ФИО владельца', max_length=200)
-    phone_number = models.CharField('Номер владельца', max_length=20)
-    pure_phone = PhoneNumberField('Нормализованный номер телефона', blank=True, null=True)
+    name = models.CharField('ФИО владельца', max_length=200, db_index=True)
+    phone_number = models.CharField('Номер владельца', max_length=20, db_index=True)
+    pure_phone = PhoneNumberField('Нормализованный номер телефона', blank=True, null=True, db_index=True)
     flats = models.ManyToManyField(to='Flat',
                                    blank=True,
                                    related_name='flats',
@@ -19,9 +19,6 @@ class Owner(models.Model):
 
 
 class Flat(models.Model):
-    owner = models.CharField('ФИО владельца', max_length=200)
-    owner_phone_number = models.CharField('Номер владельца', max_length=20)
-    owner_pure_phone = PhoneNumberField('Нормализованный номер телефона', blank=True, null=True)
     created_at = models.DateTimeField(
         'Когда создано объявление',
         default=timezone.now,
@@ -64,12 +61,11 @@ class Flat(models.Model):
         blank=True,
         db_index=True)
 
-    new_building = models.NullBooleanField("Новостройка")
+    new_building = models.NullBooleanField("Новостройка", db_index=True)
     liked_by = models.ManyToManyField(User,
                                       blank=True,
                                       related_name='likes',
-                                      verbose_name='Кто лайкнул',
-                                      )
+                                      verbose_name='Кто лайкнул')
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'

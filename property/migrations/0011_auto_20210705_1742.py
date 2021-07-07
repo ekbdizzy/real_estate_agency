@@ -16,3 +16,5 @@ class Migration(migrations.Migration):
             new_name='owner_phone_number',
         ),
     ]
+
+
