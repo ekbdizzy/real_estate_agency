@@ -61,7 +61,7 @@ class Flat(models.Model):
         blank=True,
         db_index=True)
 
-    new_building = models.NullBooleanField("Новостройка", db_index=True)
+    new_building = models.NullBooleanField('Новостройка', db_index=True)
     liked_by = models.ManyToManyField(User,
                                       blank=True,
                                       related_name='likes',
@@ -74,11 +74,11 @@ class Flat(models.Model):
 class Complaint(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                verbose_name='Кто жалуется',
-                               related_name="complaints")
+                               related_name='complaints')
     flat = models.ForeignKey(Flat, on_delete=models.CASCADE,
                              verbose_name='Квартира, на которую пожаловались',
                              related_name='complaints')
     text = models.TextField(blank=True, null=True, verbose_name='Текст жалобы')
 
     def __str__(self):
-        return f"{self.pk}: {self.author}, {self.flat.town}, {self.flat.address}"
+        return f'{self.pk}: {self.author}, {self.flat.town}, {self.flat.address}'
